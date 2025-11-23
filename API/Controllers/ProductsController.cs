@@ -13,11 +13,11 @@ namespace API.Controllers;
 public class ProductsController(IGenericRepository<Product> repo) : BaseApiController
 {
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts([FromQuery] ProductSpecParams specParams)
+    public async Task<ActionResult<Pagination<Product>>> GetProducts([FromQuery] ProductSpecParams specParams)
     {
         var spec = new ProductSpecification(specParams);
 
-        return Ok(await CreatePagedResult<Product>(repo, spec, specParams.PageIndex, specParams.PageSize));
+        return await CreatePagedResult<Product>(repo, spec, specParams.PageIndex, specParams.PageSize);
     }
 
     [HttpGet("{id:int}")]

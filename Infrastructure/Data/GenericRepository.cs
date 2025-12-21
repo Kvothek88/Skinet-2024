@@ -32,8 +32,6 @@ public class GenericRepository<T>(StoreContext context) : IGenericRepository<T> 
 
     public void Remove(T Entity) => context.Set<T>().Remove(Entity);
 
-    public async Task<bool> SaveAllAsync() => await context.SaveChangesAsync() > 0;
-
     public bool Exists(int id) => context.Set<T>().Any(x => x.Id == id);
 
     private IQueryable<T> ApplySpecification(ISpecification<T> spec)

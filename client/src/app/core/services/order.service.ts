@@ -10,6 +10,7 @@ export class OrderService {
   
   baseUrl = environment.apiUrl; 
   private http = inject(HttpClient);
+  orderComplete = false;
 
   createOrder(orderToCreate: OrderToCreate) {
     return this.http.post<Order>(this.baseUrl + 'orders', orderToCreate);
@@ -19,7 +20,7 @@ export class OrderService {
     return this.http.get<Order[]>(this.baseUrl + 'orders')
   }
 
-    getOrderDetailed(id: number) {
+  getOrderDetailed(id: number) {
     return this.http.get<Order>(this.baseUrl + 'orders/' + id)
   }
 }

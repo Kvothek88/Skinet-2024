@@ -11,6 +11,7 @@ namespace API.Controllers;
 [Route("api/[controller]")]
 public class ProductsController(IUnitOfWork unit) : BaseApiController
 {
+    [Cache(600)]
     [HttpGet]
     public async Task<ActionResult<Pagination<Product>>> GetProducts([FromQuery] ProductSpecParams specParams)
     {
@@ -19,6 +20,7 @@ public class ProductsController(IUnitOfWork unit) : BaseApiController
         return await CreatePagedResult<Product>(unit.Repository<Product>(), spec, specParams.PageIndex, specParams.PageSize);
     }
 
+    [Cache(600)]
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Product>> GetProduct(int id)
     {
@@ -29,6 +31,7 @@ public class ProductsController(IUnitOfWork unit) : BaseApiController
         return product;
     }
 
+    [Cache(10000)]
     [HttpGet("brands")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetBrands()
     {
@@ -37,6 +40,7 @@ public class ProductsController(IUnitOfWork unit) : BaseApiController
         return Ok(await unit.Repository<Product>().ListAsync(spec));
     }
 
+    [Cache(10000)]
     [HttpGet("types")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetTypes()
     {
@@ -45,6 +49,7 @@ public class ProductsController(IUnitOfWork unit) : BaseApiController
         return Ok(await unit.Repository<Product>().ListAsync(spec));
     }
 
+    [InvalidateCache("api/products|")]
     [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<ActionResult<Product>> CreateProduct(Product product)
@@ -57,6 +62,7 @@ public class ProductsController(IUnitOfWork unit) : BaseApiController
         return BadRequest("Problem creating product");
     }
 
+    [InvalidateCache("api/products|")]
     [Authorize(Roles = "Admin")]
     [HttpPut("{id:int}")]
     public async Task<ActionResult> UpdateProduct(int id, Product product)
@@ -71,6 +77,7 @@ public class ProductsController(IUnitOfWork unit) : BaseApiController
         return BadRequest("Problem updating the product");
     }
 
+    [InvalidateCache("api/products|")]
     [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteProduct(int id)
